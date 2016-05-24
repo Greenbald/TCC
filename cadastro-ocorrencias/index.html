@@ -1,0 +1,258 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/datepicker.css">
+    <script src="js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-timepicker.min.css">
+    <script src="js/bootstrap-timepicker.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/map.css">
+    <script type="text/javascript" src="js/leafletembed.js"></script>
+  </head>
+  <style>
+    body
+    .form-title
+    {
+      text-align: center;
+    }
+    .submit-button
+    {
+        float: left;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="header clearfix">
+        <h3 class="text-muted">SiAPP</h3>
+        <hr>
+      </div>
+      <div class="jumbotron">
+        <h1 class="form-title">Registro de ocorrência<h1>
+        <p class="lead">O seguinte formulário possui a intenção de coletar dados
+        para o estudo automatizado de criminalidades em Niterói, entitulado
+        SiAPP - <b>Si</b>stema de <b>A</b>poio ao <b>P</b>oliciamento <b>P</b>reditivo.<br>
+        A importância da sua colaboração é de enorme apreço, uma vez que a
+        sociedade como um todo se beneficiará de seu esforço.</p>
+      </div>
+      <hr>
+      <div class="row top">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="sel1">Selecione o tipo de ocorrência:</label>
+            <select class="form-control" id="tipo-ocorrencia">
+              <option>Roubo</option>
+              <option>Furto</option>
+              <option>Arrastão</option>
+              <option>Arrombamento Domiciliar</option>
+              <option>Arrombamento Veicular</option>
+              <option>Assalto a grupo</option>
+              <option>Roubo de Veículo</option>
+              <option>Sequestro Relâmpago</option>
+              <option>Tentativa de Assalto</option>
+            </select>
+            <br>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="sel1">Selecione o bairro da ocorrência:</label>
+          <select class="form-control" id="suburbs">
+            <option>Boa Viagem</option>
+            <option>Cachoeiras</option>
+            <option>Centro</option>
+            <option>Charitas</option>
+            <option>Fátima</option>
+            <option>Gragoatá</option>
+            <option>Icaraí</option>
+            <option>Ingá</option>
+            <option>Jurujuba</option>
+            <option>Morro do Estado</option>
+            <option>Pé Pequeno</option>
+            <option>Ponta D'Areia</option>
+            <option>Santa Rosa</option>
+            <option>São Domingos</option>
+            <option>São Francisco</option>
+            <option>Vital Brazil</option>
+            <option>Baldeador</option>
+            <option>Barreto</option>
+            <option>Caramujo</option>
+            <option>Cubango</option>
+            <option>Engenhoca</option>
+            <option>Fonseca</option>
+            <option>Ilha da Conceição</option>
+            <option>Santa Bárbara</option>
+            <option>Novo México</option>
+            <option>Santana</option>
+            <option>São Lourenço</option>
+            <option>Badu</option>
+            <option>Cantagalo</option>
+            <option>Ititioca</option>
+            <option>Largo da Batalha</option>
+            <option>Maceió</option>
+            <option>Maria Paula</option>
+            <option>Matapaca</option>
+            <option>Sapê</option>
+            <option>Monte Betel</option>
+            <option>Florália</option>
+            <option>Vila Progresso</option>
+            <option>Muriqui</option>
+            <option>Várzea das Moças</option>
+            <option>Rio do Ouro</option>
+            <option>Cafubá</option>
+            <option>Camboinhas</option>
+            <option>Engenho do Mato</option>
+            <option>Itacoatiara</option>
+            <option>Itaipu</option>
+            <option>Jacaré</option>
+            <option>Jardim Imbuí</option>
+            <option>Maravista</option>
+            <option>Piratininga</option>
+            <option>Santo Antônio</option>
+            <option>Serra Grande</option>
+          </select>
+          <!--<div class="input-group bootstrap-timepicker timepicker">
+            <input id="timepicker" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>-->
+        </div>
+        <div class="col-md-3">
+          <label for="sel1">Selecione a data da ocorrência:</label><br>
+          <label class="radio-inline"><input type="radio" name="dia-ocorrencia" checked>Dia de semana</label>
+          <label class="radio-inline"><input type="radio" name="dia-ocorrencia">Fim de semana</label>
+          <!--<div class="input-group date" data-provide="datepicker">
+              <input type="text" class="form-control" id="datepicker" data-date-format="yyyy-mm-dd">
+              <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-th"></span>
+              </div>
+          </div>-->
+        </div>
+        <div class="col-md-3">
+          <label for="sel1">Selecione a hora da ocorrência:</label>
+          <select class="form-control" id="hora-ocorrencia">
+            <option>Manha</option>
+            <option>Tarde</option>
+            <option>Noite</option>
+            <option>Madrugada</option>
+          </select>
+          <!--<div class="input-group bootstrap-timepicker timepicker">
+            <input id="timepicker" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>-->
+        </div>
+      </div>
+      <label for="sel1">Selecione todos os objetos que foram roubados no assalto:</label>
+      <div class="row mid">
+        <div class="col-md-3">
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="carteira">Carteira</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="bolsa_ou_mochila">Bolsa ou mochila</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="celular">Celular</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="documentos">Documentos</label>
+
+        </div>
+        <div class="col-md-3">
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="notebook">Notebook</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="tablet">Tablet</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="mp4_ou_ipod">MP4 ou Ipod</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="cartao_de_credito">Cartão de crédito</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="outros">Outros</label>
+        </div>
+        <div class="col-md-3">
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="relogio">Relógio</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="equipamento_de_som">Equipamento de som</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="tv">Televisão</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="dvd">DVD</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="som">Som</label>
+        </div>
+        <div class="col-md-3">
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="moveis">Móveis</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="computador">Computador</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="estepe">Estepe</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="bicicleta">Bicicleta</label>
+          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="dinheiro">Dinheiro</label>
+        </div>
+      </div>
+      <hr>
+      <!--<div class="row bot">
+        <div class="col-md-12">
+          <label for="sel1">Marque o local onde foi assaltado:</label>
+          <div id="map-wrapper">
+    	      <div id="map" class="leaf-container"> </div>
+    	    </div>
+        </div>
+      </div>-->
+      <div class="row submit">
+        <button type="button" class="btn btn-primary submit-button" onclick="onSubmeterClick();">Submeter</button>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    var marker = null;
+    $(document).ready(function ()
+    {
+      $('#timepicker').timepicker({
+        showMeridian: false
+      });
+      $('#datepicker').datepicker({
+          format: "dd/mm/yyyy",
+          language: "pt-BR"
+      });
+      //initmap();
+      //map.on('click', onMapClick);
+      sortlist();
+    });
+    function onMapClick(e)
+    {
+      var latlng = e.latlng;
+      console.log(latlng);
+      if(marker)
+        marker.setLatLng(latlng);
+      else
+        marker = L.marker(latlng).addTo(map);
+    }
+    function onSubmeterClick(e)
+    {
+      var checked = $('input[name="chk[]"]:checked');
+      if(checked.length > 0)
+      {
+        //mandar os dados para o backend.
+      }
+      else
+      {
+        if(checked.length <= 0)
+          alert("Marque algum objeto roubado, por favor.")
+      }
+    }
+    function sortlist()
+    {
+
+     var cl = document.getElementById('suburbs');
+     console.log(cl);
+     var clTexts = new Array();
+
+     for(i = 2; i < cl.length; i++){
+        clTexts[i-2] =
+            cl.options[i].text.toUpperCase() + "," +
+            cl.options[i].text + "," +
+            cl.options[i].value + "," +
+            cl.options[i].selected;
+     }
+
+     clTexts.sort();
+
+     for(i = 2; i < cl.length; i++){
+        var parts = clTexts[i-2].split(',');
+
+        cl.options[i].text = parts[1];
+        cl.options[i].value = parts[2];
+        if(parts[3] == "true"){
+            cl.options[i].selected = true;
+        }else{
+           cl.options[i].selected = false;
+        }
+     }
+    }
+  </script>
+</html>
