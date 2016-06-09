@@ -39,142 +39,156 @@
         sociedade como um todo se beneficiará de seu esforço.</p>
       </div>
       <hr>
-      <div class="row top">
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="sel1">Selecione o tipo de ocorrência:</label>
-            <select class="form-control" id="tipo-ocorrencia">
-              <option>Roubo</option>
-              <option>Furto</option>
-              <option>Arrastão</option>
-              <option>Arrombamento Domiciliar</option>
-              <option>Arrombamento Veicular</option>
-              <option>Assalto a grupo</option>
-              <option>Roubo de Veículo</option>
-              <option>Sequestro Relâmpago</option>
-              <option>Tentativa de Assalto</option>
-            </select>
-            <br>
+      <!--<form action="save_occurrence.php" onsubmit="return dateCheck(this);" method="get">-->
+      <div id="form">
+        <div class="row top">
+          <div class="col-md-3">
+                <label for="sel1">Selecione o tipo de ocorrência:</label>
+                <select class="form-control" id="tipo_ocorrencia">
+                  <option>Roubo</option>
+                  <option>Furto</option>
+                  <option>Arrastão</option>
+                  <option>Arrombamento Domiciliar</option>
+                  <option>Arrombamento Veicular</option>
+                  <option>Assalto a grupo</option>
+                  <option>Roubo de Veículo</option>
+                  <option>Sequestro Relâmpago</option>
+                  <option>Tentativa de Assalto</option>
+                </select>
+                <br>
+            </div>
+            <div class="col-md-3">
+              <label for="sel1">Selecione o bairro da ocorrência:</label>
+              <select class="form-control" id="bairros">
+                <option>Boa Viagem</option>
+                <option>Cachoeiras</option>
+                <option>Centro</option>
+                <option>Charitas</option>
+                <option>Fátima</option>
+                <option>Gragoatá</option>
+                <option>Icaraí</option>
+                <option>Ingá</option>
+                <option>Jurujuba</option>
+                <option>Morro do Estado</option>
+                <option>Pé Pequeno</option>
+                <option>Ponta D'Areia</option>
+                <option>Santa Rosa</option>
+                <option>São Domingos</option>
+                <option>São Francisco</option>
+                <option>Vital Brazil</option>
+                <option>Baldeador</option>
+                <option>Barreto</option>
+                <option>Caramujo</option>
+                <option>Cubango</option>
+                <option>Engenhoca</option>
+                <option>Fonseca</option>
+                <option>Ilha da Conceição</option>
+                <option>Santa Bárbara</option>
+                <option>Novo México</option>
+                <option>Santana</option>
+                <option>São Lourenço</option>
+                <option>Badu</option>
+                <option>Cantagalo</option>
+                <option>Ititioca</option>
+                <option>Largo da Batalha</option>
+                <option>Maceió</option>
+                <option>Maria Paula</option>
+                <option>Matapaca</option>
+                <option>Sapê</option>
+                <option>Monte Betel</option>
+                <option>Florália</option>
+                <option>Vila Progresso</option>
+                <option>Muriqui</option>
+                <option>Várzea das Moças</option>
+                <option>Rio do Ouro</option>
+                <option>Cafubá</option>
+                <option>Camboinhas</option>
+                <option>Engenho do Mato</option>
+                <option>Itacoatiara</option>
+                <option>Itaipu</option>
+                <option>Jacaré</option>
+                <option>Jardim Imbuí</option>
+                <option>Maravista</option>
+                <option>Piratininga</option>
+                <option>Santo Antônio</option>
+                <option>Serra Grande</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="sel1">Selecione a data da ocorrência:</label><br>
+              <label class="radio-inline"><input type="radio" value="business_day" name="dia_ocorrencia[]" checked>Dia de semana</label>
+              <label class="radio-inline"><input type="radio" value="weekend" name="dia_ocorrencia[]">Fim de semana</label>
+
+            </div>
+            <div class="col-md-3">
+              <label for="sel1">Selecione a hora da ocorrência:</label>
+              <select class="form-control" id="hora_ocorrencia">
+                <option>Manha</option>
+                <option>Tarde</option>
+                <option>Noite</option>
+                <option>Madrugada</option>
+              </select>
+            </div>
+          </div>
+          <label for="sel1">Selecione todos os objetos que foram roubados no assalto:</label>
+          <div class="row mid">
+            <div class="col-md-3">
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="carteira">Carteira</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="bolsa_ou_mochila">Bolsa ou mochila</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="celular">Celular</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="documentos">Documentos</label>
+
+            </div>
+            <div class="col-md-3">
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="notebook">Notebook</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="tablet">Tablet</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="mp4_ou_ipod">MP4 ou Ipod</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="cartao_de_credito">Cartão de crédito</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="outros">Outros</label>
+            </div>
+            <div class="col-md-3">
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="relogio">Relógio</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="equipamento_de_som">Equipamento de som</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="tv">Televisão</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="dvd">DVD</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="som">Som</label>
+            </div>
+            <div class="col-md-3">
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="moveis">Móveis</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="computador">Computador</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="estepe">Estepe</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="bicicleta">Bicicleta</label>
+              <label class="checkbox-inline"><input type="checkbox" name="objetos_roubados[]" value="dinheiro">Dinheiro</label>
+            </div>
+        </div>
+        <label for="sel1">Selecione todas as localizações próximas à ocorrência:</label>
+        <div class="row bot">
+          <div class="col-md-3">
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Banco">Banco</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Bar">Bar</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Clinica">Clínica Médica</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Escola">Escola</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Hospital">Hospital</label>
+          </div>
+          <div class="col-md-3">
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Loja de Eletronicos">Loja de Eletrônicos</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Policia Civil">Polícia Civil</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Policia Militar">Polícia Militar</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Ponto Turistico">Ponto Turístico</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Posto de Gasolina">Posto de Gasolina</label>
+          </div>
+          <div class="col-md-3">
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Quiosque">Quiosque</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Restaurante">Restaurante</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Super Mercado">Super Mercado</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Teatro">Teatro</label>
+            <label class="checkbox-inline"><input type="checkbox" name="localizacao_proxima[]" value="Universidade">Universidade</label>
           </div>
         </div>
-        <div class="col-md-3">
-          <label for="sel1">Selecione o bairro da ocorrência:</label>
-          <select class="form-control" id="suburbs">
-            <option>Boa Viagem</option>
-            <option>Cachoeiras</option>
-            <option>Centro</option>
-            <option>Charitas</option>
-            <option>Fátima</option>
-            <option>Gragoatá</option>
-            <option>Icaraí</option>
-            <option>Ingá</option>
-            <option>Jurujuba</option>
-            <option>Morro do Estado</option>
-            <option>Pé Pequeno</option>
-            <option>Ponta D'Areia</option>
-            <option>Santa Rosa</option>
-            <option>São Domingos</option>
-            <option>São Francisco</option>
-            <option>Vital Brazil</option>
-            <option>Baldeador</option>
-            <option>Barreto</option>
-            <option>Caramujo</option>
-            <option>Cubango</option>
-            <option>Engenhoca</option>
-            <option>Fonseca</option>
-            <option>Ilha da Conceição</option>
-            <option>Santa Bárbara</option>
-            <option>Novo México</option>
-            <option>Santana</option>
-            <option>São Lourenço</option>
-            <option>Badu</option>
-            <option>Cantagalo</option>
-            <option>Ititioca</option>
-            <option>Largo da Batalha</option>
-            <option>Maceió</option>
-            <option>Maria Paula</option>
-            <option>Matapaca</option>
-            <option>Sapê</option>
-            <option>Monte Betel</option>
-            <option>Florália</option>
-            <option>Vila Progresso</option>
-            <option>Muriqui</option>
-            <option>Várzea das Moças</option>
-            <option>Rio do Ouro</option>
-            <option>Cafubá</option>
-            <option>Camboinhas</option>
-            <option>Engenho do Mato</option>
-            <option>Itacoatiara</option>
-            <option>Itaipu</option>
-            <option>Jacaré</option>
-            <option>Jardim Imbuí</option>
-            <option>Maravista</option>
-            <option>Piratininga</option>
-            <option>Santo Antônio</option>
-            <option>Serra Grande</option>
-          </select>
-          <!--<div class="input-group bootstrap-timepicker timepicker">
-            <input id="timepicker" type="text" class="form-control input-small">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-          </div>-->
-        </div>
-        <div class="col-md-3">
-          <label for="sel1">Selecione a data da ocorrência:</label><br>
-          <label class="radio-inline"><input type="radio" name="dia-ocorrencia" checked>Dia de semana</label>
-          <label class="radio-inline"><input type="radio" name="dia-ocorrencia">Fim de semana</label>
-          <!--<div class="input-group date" data-provide="datepicker">
-              <input type="text" class="form-control" id="datepicker" data-date-format="yyyy-mm-dd">
-              <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
-              </div>
-          </div>-->
-        </div>
-        <div class="col-md-3">
-          <label for="sel1">Selecione a hora da ocorrência:</label>
-          <select class="form-control" id="hora-ocorrencia">
-            <option>Manha</option>
-            <option>Tarde</option>
-            <option>Noite</option>
-            <option>Madrugada</option>
-          </select>
-          <!--<div class="input-group bootstrap-timepicker timepicker">
-            <input id="timepicker" type="text" class="form-control input-small">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-          </div>-->
-        </div>
+        <hr>
+        <button type="button" class="btn btn-primary submit-button" onclick="sendData();">Submeter</button>
+        
       </div>
-      <label for="sel1">Selecione todos os objetos que foram roubados no assalto:</label>
-      <div class="row mid">
-        <div class="col-md-3">
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="carteira">Carteira</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="bolsa_ou_mochila">Bolsa ou mochila</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="celular">Celular</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="documentos">Documentos</label>
-
-        </div>
-        <div class="col-md-3">
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="notebook">Notebook</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="tablet">Tablet</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="mp4_ou_ipod">MP4 ou Ipod</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="cartao_de_credito">Cartão de crédito</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="outros">Outros</label>
-        </div>
-        <div class="col-md-3">
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="relogio">Relógio</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="equipamento_de_som">Equipamento de som</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="tv">Televisão</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="dvd">DVD</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="som">Som</label>
-        </div>
-        <div class="col-md-3">
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="moveis">Móveis</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="computador">Computador</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="estepe">Estepe</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="bicicleta">Bicicleta</label>
-          <label class="checkbox-inline"><input type="checkbox" name="chk[]" value="dinheiro">Dinheiro</label>
-        </div>
-      </div>
-      <hr>
       <!--<div class="row bot">
         <div class="col-md-12">
           <label for="sel1">Marque o local onde foi assaltado:</label>
@@ -183,9 +197,6 @@
     	    </div>
         </div>
       </div>-->
-      <div class="row submit">
-        <button type="button" class="btn btn-primary submit-button" onclick="onSubmeterClick();">Submeter</button>
-      </div>
     </div>
   </body>
   <script type="text/javascript">
@@ -212,24 +223,51 @@
       else
         marker = L.marker(latlng).addTo(map);
     }
-    function onSubmeterClick(e)
+    function sendData()
     {
-      var checked = $('input[name="chk[]"]:checked');
-      if(checked.length > 0)
+      var objetosRoubados = $('input[name="objetos_roubados[]"]:checked');
+
+      var localizacoesProximas = $('input[name="localizacao_proxima[]"]:checked');
+
+      if((objetosRoubados.length <= 0) || (localizacoesProximas.length <= 0))
       {
-        //mandar os dados para o backend.
+        alert("Marque algum objeto roubado ou localização próxima, por favor.")
+        return;
       }
-      else
+
+      var objetosRoubadosArray = [];
+      $(objetosRoubados).each(function() 
       {
-        if(checked.length <= 0)
-          alert("Marque algum objeto roubado, por favor.")
-      }
+        objetosRoubadosArray.push($(this).val());
+      });
+
+      var localizacoesProximasArray = [];
+      $(localizacoesProximas).each(function ()
+      {
+        localizacoesProximasArray.push($(this).val());
+      });
+
+      var formElements = document.getElementById("form").getElementsByClassName("form-control");
+      var dia = $('input[name="dia_ocorrencia[]"]:checked').val();
+      var bairro = formElements.bairros.value;
+      var tipoOcorrencia = formElements.tipo_ocorrencia.value;
+      var horaOcorrencia = formElements.hora_ocorrencia.value;
+
+      $.ajax(
+      {  
+          type: 'POST',  
+          url: 'test.php', 
+          data: { suburb: bairro, occurrence_type: tipoOcorrencia, time: horaOcorrencia, date: dia, nearby_location: localizacoesProximasArray, stolen_objects: objetosRoubadosArray },
+          success: function(response)
+          {
+              content.html(response);
+          }
+      });
     }
     function sortlist()
     {
 
-     var cl = document.getElementById('suburbs');
-     console.log(cl);
+     var cl = document.getElementById('bairros');
      var clTexts = new Array();
 
      for(i = 2; i < cl.length; i++){
