@@ -256,7 +256,7 @@
       $.ajax(
       {  
           type: 'POST',  
-          url: 'test.php', 
+          url: 'save_occurrence.php', 
           data: { suburb: bairro, occurrence_type: tipoOcorrencia, time: horaOcorrencia, date: dia, nearby_location: localizacoesProximasArray, stolen_objects: objetosRoubadosArray },
           success: function(response)
           {
