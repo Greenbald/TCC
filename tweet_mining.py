@@ -3,7 +3,8 @@ from __future__ import absolute_import, print_function
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from util.tweet_controller import decode
+from util.tweet_controller import *
+import json
 
 consumer_key = "6ZvBQkiTM2rX2svhAlMgg3Ekm"
 consumer_secret = "Xxyg43oq6JHoGrWS0zFXkUysscDuTk1FYIABsrbNpputlouJED"
@@ -18,9 +19,8 @@ class StdOutListener(StreamListener):
 
     """
     def on_data(self, data):
-        print(data)
-        decoded_data = decode(data)
-        print(decoded_data.get('gg') )
+        json_obj = json.loads(data)
+        get_data_objects(json_obj)
         return True
 
     def on_error(self, status):

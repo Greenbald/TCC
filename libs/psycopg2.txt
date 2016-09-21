@@ -1,0 +1,7 @@
+under windows use the command below :
+
+     pip install psycopg2
+
+under linux use the command below :
+
+     sudo apt-get install python-psycopg2
