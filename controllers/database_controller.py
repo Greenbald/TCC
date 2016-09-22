@@ -24,11 +24,14 @@ def close():
 def insert_tweet(tweet):
 	if(cur is not None):
 		print("Sending tweet query...")
-		cur.execute(
-     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text)
-         	VALUES (%s, %s, %s , %s);""",
-     			(tweet.get_tweet_id(), tweet.get_created_at(), 
-     			tweet.get_user_id(), tweet.get_text()))
+		try:
+			cur.execute(
+	     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text)
+	         	VALUES (%s, %s, %s , %s);""",
+	     			(tweet.get_tweet_id(), tweet.get_created_at(), 
+	     			tweet.get_user_id(), tweet.get_text()))
+		except psycopg2.IntegrityError:
+			conn.rollback()
 
 def insert_user(user):
 	if(cur is not None):
