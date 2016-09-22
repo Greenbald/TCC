@@ -1,4 +1,4 @@
-To use the algorithm, two libraries must be used in order to make it work.
+To use the algorithm, two libraries must be installed in order to make it work.
 
   1. psycopg2(Library to connect to a existing postgresql database).
   2. Tweepy(In order to get twitter's tweets and user overall information).
