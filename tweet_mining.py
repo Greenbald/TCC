@@ -27,6 +27,9 @@ class StdOutListener(StreamListener):
         print(status)
 
 if __name__ == '__main__':
+
+    init_database()
+
     l = StdOutListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)

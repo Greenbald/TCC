@@ -7,24 +7,19 @@ class Tweet():
         self._source_device = source_device
         self._created_time = created_time
         self._user_id = user_id
-
-    @property
+ 
     def get_text(self):
         return self._text
 
-    @property
     def get_tweet_id(self):
         return self._tweet_id
 
-    @property
     def get_source_device(self):
         return self._source_device
 
-    @property
-    def get_created_time(self):
+    def get_created_at(self):
         return self._created_time
 
-    @property
     def get_user_id(self):
         return self._user_id
 
@@ -48,23 +43,19 @@ class User():
         self._location = location
         self._followers_count = followers_count
 
-    @property
+    
     def get_user_id(self):
         return self._user_id
-
-    @property
+    
     def get_friends_count(self):
         return self._friends_count
 
-    @property
     def get_description(self):
         return self._description
-
-    @property
+    
     def get_location(self):
         return self._location
 
-    @property
     def get_followers_count(self):
         return self._followers_count
 
