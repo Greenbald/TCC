@@ -2,6 +2,7 @@ import psycopg2
 
 conn = None
 cur = None
+count = 0
 
 def open_database_connection():
 	print("Connecting to the database...")
@@ -9,6 +10,13 @@ def open_database_connection():
 	conn = psycopg2.connect("dbname = tweeling user=postgres")
 	global cur
 	cur = conn.cursor()
+
+def commit_batch_if_threshold():
+	global count
+	count += 1
+	if(count == 100):
+		commit()
+		count = 0
 
 def commit():
 	if(conn is not None):
@@ -23,7 +31,6 @@ def close():
 
 def insert_tweet(tweet):
 	if(cur is not None):
-		print("Sending tweet query...")
 		try:
 			cur.execute(
 	     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text)
@@ -35,7 +42,6 @@ def insert_tweet(tweet):
 
 def insert_user(user):
 	if(cur is not None):
-		print("Sending user query...")
 		cur.execute(
      		 """INSERT INTO \"User\" (u_id, description, location, followers_count, friends_count)
          	VALUES (%s, %s, %s , %s, %s);""",
@@ -46,6 +52,7 @@ def insert_data(tweet, user):
 	if(not(verify_user_existence_in_database(user))):
 		insert_user(user)
 	insert_tweet(tweet)
+	commit_batch_if_threshold()
 
 
 def verify_user_existence_in_database(user):

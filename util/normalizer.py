@@ -1,7 +1,7 @@
 import time
 
 
-def normalize_source_device(source): """ NORMALIZE FUNCTION """
+def normalize_source_device(source):
 
 	source_device = source
 
@@ -29,7 +29,7 @@ def convert_utc_to_brt(utc_time):
 	return str(h) + utc_time[2:]
 
 
-def normalize_time(t): """ NORMALIZE FUNCTION """
+def normalize_time(t):
 	""" This function is necessary because the time zone provided
 		by the twitter is UTC, so we need to convert to BRT(-3h). 
 		of course this is not necessarily true, because exists 
