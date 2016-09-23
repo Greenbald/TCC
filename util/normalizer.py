@@ -23,10 +23,14 @@ def normalize_source_device(source):
 def convert_utc_to_brt(utc_time):
 	""" UTC time is 3 hours ahead of brazil 
 		it does not consider the summer time """
-	h = int(utc_time[:2]) - 3
+	i = 2
+	if(":" in utc_time[:i]):
+		i -= 1
+	h = int(utc_time[:i]) - 3
+	r = utc_time[i:]
 	if(h < 0):
 		h = h + 24
-	return str(h) + utc_time[2:]
+	return str(h) + r
 
 
 def normalize_time(t):
@@ -39,7 +43,7 @@ def normalize_time(t):
 
 	new_t = convert_utc_to_brt(new_t)
 
-	h = int(new_t[:2])
+	h = int(new_t.split(":")[0])
 	if(h >= 6 and h < 12):
 		return "Manha"
 	elif(h >= 12 and h < 18):
