@@ -14,13 +14,14 @@ def exit_handler():
 atexit.register(exit_handler)
 
 def save_data_to_database(data_json):
-	tweet = create_tweet_object(data_json)
+	entities = create_entities_object(data_json)
+	tweet = create_tweet_object(data_json, entities)
 	user = create_user_object(data_json)
 
 	if(not((tweet is None) or (user is None))):
-		database_controller.insert_data(tweet, user)
+		database_controller.insert_data(tweet, user, entities)
 
-def create_tweet_object(data_json):
+def create_tweet_object(data_json, entities):
 	""" Creates an object of type Tweet with the
 		data in the data_json arg """
 
@@ -32,7 +33,6 @@ def create_tweet_object(data_json):
 		
 		t = normalize_time(data_json.get("created_at"))
 
-		entities = create_entities_object(data_json.get("entities", {}))
 		text = data_json.get("text")
 		raw_text = text_processor.remove_entities(data_json.get("text"), entities)
 
@@ -55,18 +55,19 @@ def create_user_object(data_json):
 		return user
 	return None
 
-def create_entities_object(entities):
+def create_entities_object(data_json):
+	entities = data_json.get("entities", {})
 	hashtags = []
-	for ht in entities.get("hashtags"):
+	for ht in entities.get("hashtags", []):
 		hashtags.append("#" + ht.get("text"))
 	urls = []
-	for u in entities.get("urls"):
+	for u in entities.get("urls", []):
 		urls.append(u.get("url"))
 	user_mentions = []
-	for um in entities.get("user_mentions"):
+	for um in entities.get("user_mentions", []):
 		user_mentions.append("@" + um.get("screen_name"))
 	symbols = []
-	for s in entities.get("symbols"):
+	for s in entities.get("symbols", []):
 		symbols.append("$" + s.get("text"))
 
 	return Entities(hashtags, user_mentions, urls, symbols)

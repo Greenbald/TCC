@@ -9,18 +9,15 @@ def open_database_connection():
 	global conn
 	conn = psycopg2.connect("dbname = tweeling user=postgres")
 	global cur
-	cur = conn.cursor()
-
-def commit_batch_if_threshold():
-	global count
-	count += 1
-	if(count == 100):
-		commit()
-		count = 0
+	cur = conn.cursor()	
 
 def commit():
 	if(conn is not None):
-		print("Commiting all data...")
+		global count
+		count += 1
+		if(count == 100):
+			print("Commiting all data...")
+			count = 0
 		conn.commit()
 
 def close():
@@ -34,12 +31,14 @@ def insert_tweet(tweet):
 		try:
 			cur.execute(
 	     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text, source, raw_text)
-	         	VALUES (%s, %s, %s , %s, %s, %s);""",
+	         	VALUES (%s, %s, %s , %s, %s, %s) RETURNING id;""",
 	     			(tweet.get_tweet_id(), tweet.get_created_at(), 
 	     			tweet.get_user_id(), tweet.get_text(), tweet.get_source_device(),
 	     			tweet.get_raw_text()))
+			return cur.fetchone()[0]
 		except psycopg2.IntegrityError:
 			conn.rollback()
+	return -1
 
 def insert_user(user):
 	if(cur is not None):
@@ -49,14 +48,55 @@ def insert_user(user):
      			(user.get_user_id(), user.get_description(), 
      			user.get_location(), user.get_followers_count(), user.get_friends_count()))
 
-def insert_data(tweet, user):
+def update_hashtag_count(tup):
+	if(cur is not None):
+		count = str(int(tup[1]) + 1)
+		cur.execute("""UPDATE "Hashtag" SET count=%s WHERE id=%s;""",
+					(count, tup[0]))
+
+def insert_hashtags(hashtags):
+	""" This function insert the new hashtag in the database or updates
+		an old one to increase its count. The return value is an array
+		containing all related hashtags """
+	ids = []
+	if(cur is not None):
+		for ht in hashtags:
+			tup = get_hashtag_count(ht.lower())
+			if(tup is None):
+				cur.execute(
+					"""INSERT INTO "Hashtag" (text) VALUES('{0}') RETURNING id;""".format(ht.lower()))
+				h_id = cur.fetchone()[0]
+				ids.append(h_id)
+			else:
+				update_hashtag_count(tup)
+				h_id = tup[0]
+				ids.append(h_id)
+	return ids
+
+def insert_tweet_hashtags(t_id, h_ids):
+	if(cur is not None):
+		for i in h_ids:
+			cur.execute(
+				"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
+				(t_id, i))
+
+def insert_data(tweet, user, entities):
 	if(not(verify_user_existence_in_database(user))):
 		insert_user(user)
-	insert_tweet(tweet)
-	commit_batch_if_threshold()
-
+	t_id = insert_tweet(tweet)
+	h_ids = insert_hashtags(entities.get_hashtags())
+	insert_tweet_hashtags(t_id, h_ids)
+	commit()
 
 def verify_user_existence_in_database(user):
 	cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
 	existence = cur.fetchone()[0]
 	return existence
+
+def get_hashtag_count(hashtag):
+	cur.execute("""SELECT id, count FROM "Hashtag" WHERE text='{0}';""".format(hashtag))
+	result = cur.fetchone()
+	if(result is not None):
+		return result
+	else:
+		result
