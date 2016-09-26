@@ -66,3 +66,40 @@ class User():
         "Location : " + str(self._location) + "\n" \
         "Followers_Count : " + str(self._followers_count) + "\n" \
         "---------------------------------------------------------"
+
+class Entities():
+    """ A representation of the user whose tweet was captured """
+    
+    def __init__(self, hashtags=[], user_mentions=[], urls=[], symbols=[], media=False):
+        self._hashtags = hashtags
+        self._user_mentions = user_mentions
+        self._urls = urls
+        self._symbols = symbols
+        self._media = media
+
+    
+    def get_hashtags(self):
+        return self._hashtags
+    
+    def get_user_mentions(self):
+        return self._user_mentions
+
+    def get_description(self):
+        return self._description
+    
+    def get_urls(self):
+        return self._urls
+
+    def get_symbols(self):
+        return self._symbols
+
+    def get_media(self):
+        return self._media
+
+    def __repr__(self):
+        return "Hashtags : " + str(self._hashtags) + "\n" \
+        "User_Mentions :" + str(self._user_mentions) + "\n" \
+        "URLs : " + str(self._urls) + "\n" \
+        "Symbols : " + str(self._symbols) + "\n" \
+        "Media : " + str(self._media) + "\n" \
+        "---------------------------------------------------------"

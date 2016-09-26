@@ -1,4 +1,4 @@
-from models.model import Tweet, User
+from models.model import Tweet, User, Entities
 from controllers import database_controller
 import atexit
 from util.normalizer import *
@@ -15,22 +15,37 @@ atexit.register(exit_handler)
 def save_data_to_database(data_json):
 	tweet = create_tweet_object(data_json)
 	user = create_user_object(data_json)
-	if(not((tweet is None) or (user is None))):
-		database_controller.insert_data(tweet, user)
+
+	#if(not((tweet is None) or (user is None))):
+		#database_controller.insert_data(tweet, user)
 
 def create_tweet_object(data_json):
 	""" Creates an object of type Tweet with the
 		data in the data_json arg """
 
 	user_json = data_json.get("user", None)
+	reply = False
+	if(data_json.get("in_reply_to_screen_name") is not None):
+		reply = True
 
-	if(user_json is not None):
+	if((user_json is not None) and (not reply)):
 		if(data_json.get("id_str", None) is None):
 			return None
 
 		source_device = normalize_source_device(str(data_json.get("source")))
 		
 		t = normalize_time(data_json.get("created_at"))
+
+		#print(data_json.get("text") + " | " + str(data_json.get("retweeted")))
+
+		"""entities = create_entities_object(data_json.get("entities"))
+		print("+++++++++++++++++++")
+		print(data_json.get("text"))
+		print("----------------------")
+		print(entities)
+		print("+++++++++++++++++++")
+		#print(data_json.get("entities"))
+		#print("-----------------------")"""
 
 		tweet = Tweet(data_json.get("text"), data_json.get("id_str"), 
 					  source_device, t, user_json.get("id"))
@@ -50,3 +65,21 @@ def create_user_object(data_json):
 			user_json.get("followers_count", 0))
 		return user
 	return None
+
+def create_entities_object(entities):
+	hashtags = []
+	for ht in entities.get("hashtags"):
+		hashtags.append(ht)
+	urls = []
+	for u in entities.get("urls"):
+		urls.append(u)
+	user_mentions = []
+	for um in entities.get("user_mentions"):
+		user_mentions.append(um)
+	symbols = []
+	for s in entities.get("symbols"):
+		symbols.append(s)
+	media = False
+	if(entities.get("media", None) is not None):
+		media = True
+	return Entities(hashtags, user_mentions, urls, symbols, media)
