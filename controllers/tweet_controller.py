@@ -67,7 +67,7 @@ def create_entities_object(entities):
 		user_mentions.append("@" + um.get("screen_name"))
 	symbols = []
 	for s in entities.get("symbols"):
-		symbols.append(s.get("text"))
+		symbols.append("$" + s.get("text"))
 
 	return Entities(hashtags, user_mentions, urls, symbols)
 
