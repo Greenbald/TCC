@@ -24,19 +24,14 @@ def create_tweet_object(data_json):
 		data in the data_json arg """
 
 	user_json = data_json.get("user", None)
-	reply = False
-	if(data_json.get("in_reply_to_screen_name") is not None):
-		reply = True
 
-	if((user_json is not None) and (not reply)):
-		if(data_json.get("id_str", None) is None):
-			return None
+	if(validate_twitter(data_json)):
 
 		source_device = normalize_source_device(str(data_json.get("source")))
 		
 		t = normalize_time(data_json.get("created_at"))
 
-		#print(data_json.get("text") + " | " + str(data_json.get("retweeted")))
+		print(data_json.get("text") + " | " + str(data_json.get("retweeted_status", None)))
 
 		"""entities = create_entities_object(data_json.get("entities"))
 		print("+++++++++++++++++++")
@@ -83,3 +78,20 @@ def create_entities_object(entities):
 	if(entities.get("media", None) is not None):
 		media = True
 	return Entities(hashtags, user_mentions, urls, symbols, media)
+
+def validate_twitter(data_json):
+	""" This function return a bool value wether the
+		tweet is valid or not regarding the restrictions
+		of the programmer """
+	user_json = data_json.get("user", None)
+	reply = False
+	if(data_json.get("in_reply_to_screen_name") is not None):
+		reply = True
+	retweet = False
+	if(data_json.get("retweeted_status", None) is not None):
+		retweet = True
+	id_str = True
+	if(data_json.get("id_str", None) is None):
+		id_str = False
+
+	return (user_json is not None) and (not reply) and (not retweet) and id_str
