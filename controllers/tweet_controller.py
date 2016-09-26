@@ -2,6 +2,7 @@ from models.model import Tweet, User, Entities
 from controllers import database_controller
 import atexit
 from util.normalizer import *
+from util import text_processor
 
 def init_database():
 	database_controller.open_database_connection()
@@ -16,8 +17,8 @@ def save_data_to_database(data_json):
 	tweet = create_tweet_object(data_json)
 	user = create_user_object(data_json)
 
-	#if(not((tweet is None) or (user is None))):
-		#database_controller.insert_data(tweet, user)
+	if(not((tweet is None) or (user is None))):
+		database_controller.insert_data(tweet, user)
 
 def create_tweet_object(data_json):
 	""" Creates an object of type Tweet with the
@@ -31,18 +32,11 @@ def create_tweet_object(data_json):
 		
 		t = normalize_time(data_json.get("created_at"))
 
-		print(data_json.get("text") + " | " + str(data_json.get("retweeted_status", None)))
+		entities = create_entities_object(data_json.get("entities", {}))
+		text = data_json.get("text")
+		raw_text = text_processor.remove_entities(data_json.get("text"), entities)
 
-		"""entities = create_entities_object(data_json.get("entities"))
-		print("+++++++++++++++++++")
-		print(data_json.get("text"))
-		print("----------------------")
-		print(entities)
-		print("+++++++++++++++++++")
-		#print(data_json.get("entities"))
-		#print("-----------------------")"""
-
-		tweet = Tweet(data_json.get("text"), data_json.get("id_str"), 
+		tweet = Tweet(text, raw_text, data_json.get("id_str"), 
 					  source_device, t, user_json.get("id"))
 
 		return tweet
@@ -50,7 +44,7 @@ def create_tweet_object(data_json):
 	return None
 
 def create_user_object(data_json):
-	""" Creates an object of type User with the
+	""" Creates an object of type user with the
 		data in the user_json arg """
 	user_json = data_json.get("user", None)
 	if(user_json is not None):
@@ -64,26 +58,26 @@ def create_user_object(data_json):
 def create_entities_object(entities):
 	hashtags = []
 	for ht in entities.get("hashtags"):
-		hashtags.append(ht)
+		hashtags.append("#" + ht.get("text"))
 	urls = []
 	for u in entities.get("urls"):
-		urls.append(u)
+		urls.append(u.get("url"))
 	user_mentions = []
 	for um in entities.get("user_mentions"):
-		user_mentions.append(um)
+		user_mentions.append("@" + um.get("screen_name"))
 	symbols = []
 	for s in entities.get("symbols"):
-		symbols.append(s)
-	media = False
-	if(entities.get("media", None) is not None):
-		media = True
-	return Entities(hashtags, user_mentions, urls, symbols, media)
+		symbols.append(s.get("text"))
+
+	return Entities(hashtags, user_mentions, urls, symbols)
 
 def validate_twitter(data_json):
 	""" This function return a bool value wether the
 		tweet is valid or not regarding the restrictions
 		of the programmer """
 	user_json = data_json.get("user", None)
+	media = data_json.get("entities", {}).get("media", None)
+
 	reply = False
 	if(data_json.get("in_reply_to_screen_name") is not None):
 		reply = True
@@ -94,4 +88,9 @@ def validate_twitter(data_json):
 	if(data_json.get("id_str", None) is None):
 		id_str = False
 
-	return (user_json is not None) and (not reply) and (not retweet) and id_str
+	if(media is None):
+		media = False
+	else:
+		media = True
+
+	return (user_json is not None) and (not reply) and (not retweet) and id_str and (not media)
