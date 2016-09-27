@@ -1,4 +1,5 @@
 import psycopg2
+import sys
 
 conn = None
 cur = None
@@ -63,30 +64,41 @@ def insert_hashtags(hashtags):
 		for ht in hashtags:
 			tup = get_hashtag_count(ht.lower())
 			if(tup is None):
-				cur.execute(
-					"""INSERT INTO "Hashtag" (text) VALUES('{0}') RETURNING id;""".format(ht.lower()))
-				h_id = cur.fetchone()[0]
-				ids.append(h_id)
+				try:
+					cur.execute(
+						"""INSERT INTO "Hashtag" (text) VALUES('{0}') RETURNING id;""".format(ht.lower()))
+					h_id = cur.fetchone()[0]
+					ids.append(h_id)
+				except psycopg2.Error as e:
+					print(e.pgerror)
+					#TODO ROLLBACK
+					sys.exit(1)
 			else:
 				update_hashtag_count(tup)
 				h_id = tup[0]
 				ids.append(h_id)
 	return ids
 
-def insert_tweet_hashtags(t_id, h_ids):
+def insert_tweet_hashtags(t_id, h_ids, tweet, entities):
 	if(cur is not None):
+		h_ids = list(set(h_ids))
 		for i in h_ids:
-			cur.execute(
-				"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
-				(t_id, i))
+			try:
+				cur.execute(
+					"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
+					(t_id, i))
+			except psycopg2.Error as e:
+				print(e.pgerror)
+				sys.exit(1)
 
 def insert_data(tweet, user, entities):
 	if(not(verify_user_existence_in_database(user))):
 		insert_user(user)
 	t_id = insert_tweet(tweet)
-	h_ids = insert_hashtags(entities.get_hashtags())
-	insert_tweet_hashtags(t_id, h_ids)
-	commit()
+	if(t_id >= 0):
+		h_ids = insert_hashtags(entities.get_hashtags())
+		insert_tweet_hashtags(t_id, h_ids, tweet, entities)
+		commit()
 
 def verify_user_existence_in_database(user):
 	cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
