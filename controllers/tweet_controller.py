@@ -17,4 +17,4 @@ def save_data_to_database(data_json):
 	user = create_user_object(data_json)
 
 	if(not((tweet is None) or (user is None))):
-		database_controller.insert_data(tweet, user, entities)
+		database_controller.insert_data(tweet, user)

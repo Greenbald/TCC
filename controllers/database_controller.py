@@ -29,13 +29,13 @@ def close():
 		conn.close()
 
 
-def insert_data(tweet, user, entities):
+def insert_data(tweet, user):
 	try:
 		insert_or_update_user(user)
 
 		t_id = insert_tweet(tweet)
 
-		insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, entities)
+		insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, tweet.get_entities())
 	except psycopg2.Error as e:
 		print(e.pgerror)
 		conn.rollback()

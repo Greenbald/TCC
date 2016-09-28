@@ -18,7 +18,7 @@ def create_tweet_object(data_json, entities):
 		raw_text = text_processor.remove_entities(data_json.get("text"), entities)
 
 		tweet = Tweet(text, raw_text, data_json.get("id_str"), 
-					  source_device, t, user_json.get("id"))
+					  source_device, t, user_json.get("id"), entities)
 
 		return tweet
 

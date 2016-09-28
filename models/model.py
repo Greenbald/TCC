@@ -1,14 +1,14 @@
-
 class Tweet():
     """ A tweet model to save in the database """
     def __init__(self, text, raw_text, tweet_id, 
-                source_device, created_time, user_id):
+                source_device, created_time, user_id, entities):
         self._text = text
         self._raw_text = raw_text
         self._tweet_id = tweet_id
         self._source_device = source_device
         self._created_time = created_time
         self._user_id = user_id
+        self._entities = entities
  
     def get_text(self):
         return self._text
@@ -28,6 +28,9 @@ class Tweet():
     def get_user_id(self):
         return self._user_id
 
+    def get_entities(self):
+        return self._entities
+
     def __repr__(self):
         return "Text : " + str(self._text) + "\n" \
         "Raw_Text : " + str(self._raw_text) + "\n" \
@@ -35,6 +38,7 @@ class Tweet():
         "Source_Device : " + str(self._source_device) + "\n" \
         "Created_Time : " + str(self._created_time) + "\n" \
         "User_ID : " + str(self._user_id) + "\n" \
+        "Entities : " + str(self._entities) + "\n" \
         "-----------------------------------------------"
 
 
@@ -96,8 +100,7 @@ class Entities():
         return self._symbols
 
     def __repr__(self):
-        return "Hashtags : " + str(self._hashtags) + "\n" \
-        "User_Mentions :" + str(self._user_mentions) + "\n" \
-        "URLs : " + str(self._urls) + "\n" \
-        "Symbols : " + str(self._symbols) + "\n" \
-        "---------------------------------------------------------"
+        return "Hashtags : " + str(self._hashtags) + " ; " \
+        "User_Mentions :" + str(self._user_mentions) + " ; " \
+        "URLs : " + str(self._urls) + " ; " \
+        "Symbols : " + str(self._symbols) + " ; "
