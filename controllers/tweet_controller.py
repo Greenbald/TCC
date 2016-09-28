@@ -8,7 +8,6 @@ def init_database():
 	database_controller.open_database_connection()
 
 def exit_handler(): 
-	database_controller.commit()
 	database_controller.close()
 
 atexit.register(exit_handler)

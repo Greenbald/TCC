@@ -24,22 +24,32 @@ def commit():
 def close():
 	if((conn  is not None) and (cur is not None)):
 		print("Closing the database...")
+		conn.rollback()
 		cur.close()
 		conn.close()
 
-def insert_tweet(tweet):
-	if(cur is not None):
-		try:
-			cur.execute(
-	     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text, source, raw_text)
-	         	VALUES (%s, %s, %s , %s, %s, %s) RETURNING id;""",
-	     			(tweet.get_tweet_id(), tweet.get_created_at(), 
-	     			tweet.get_user_id(), tweet.get_text(), tweet.get_source_device(),
-	     			tweet.get_raw_text()))
-			return cur.fetchone()[0]
-		except psycopg2.IntegrityError:
-			conn.rollback()
-	return -1
+
+def insert_data(tweet, user, entities):
+	try:
+		insert_or_update_user(user)
+
+		t_id = insert_tweet(tweet)
+
+		insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, entities)
+	except psycopg2.Error as e:
+		print(e.pgerror)
+		conn.rollback()
+
+def insert_or_update_user(user):
+	if(not(verify_user_existence_in_database(user))):
+		insert_user(user)
+	else:
+		update_user(user)
+
+def verify_user_existence_in_database(user):
+	cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
+	existence = cur.fetchone()[0]
+	return existence
 
 def insert_user(user):
 	if(cur is not None):
@@ -49,11 +59,30 @@ def insert_user(user):
      			(user.get_user_id(), user.get_description(), 
      			user.get_location(), user.get_followers_count(), user.get_friends_count()))
 
-def update_hashtag_count(tup):
+def update_user(user):
+	cur.execute("""UPDATE "User"
+   				SET friends_count=%s, description=%s, location=%s, followers_count=%s
+   				WHERE u_id =%s;""", (user.get_friends_count(), user.get_description(),
+   									user.get_location(), user.get_followers_count(),
+   									user.get_user_id()))
+
+def insert_tweet(tweet):
 	if(cur is not None):
-		count = str(int(tup[1]) + 1)
-		cur.execute("""UPDATE "Hashtag" SET count=%s WHERE id=%s;""",
-					(count, tup[0]))
+		cur.execute(
+     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text, source, raw_text)
+         	VALUES (%s, %s, %s , %s, %s, %s) RETURNING id;""",
+     			(tweet.get_tweet_id(), tweet.get_created_at(), 
+     			tweet.get_user_id(), tweet.get_text(), tweet.get_source_device(),
+     			tweet.get_raw_text()))
+		return cur.fetchone()[0]
+	return -1
+
+def insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, entities):
+	if(t_id >= 0):
+		h_ids = insert_hashtags(entities.get_hashtags())
+		insert_tweet_hashtags(t_id, h_ids)
+		commit()
+
 
 def insert_hashtags(hashtags):
 	""" This function insert the new hashtag in the database or updates
@@ -62,53 +91,36 @@ def insert_hashtags(hashtags):
 	ids = []
 	if(cur is not None):
 		for ht in hashtags:
-			tup = get_hashtag_count(ht.lower())
+			tup = get_hashtag_tuple(ht.lower())
 			if(tup is None):
-				try:
-					cur.execute(
-						"""INSERT INTO "Hashtag" (text) VALUES('{0}') RETURNING id;""".format(ht.lower()))
-					h_id = cur.fetchone()[0]
-					ids.append(h_id)
-				except psycopg2.Error as e:
-					print(e.pgerror)
-					#TODO ROLLBACK
-					sys.exit(1)
+				cur.execute(
+					"""INSERT INTO "Hashtag" (text) VALUES('{0}') RETURNING id;""".format(ht.lower()))
+				h_id = cur.fetchone()[0]
+				ids.append(h_id)
 			else:
 				update_hashtag_count(tup)
 				h_id = tup[0]
 				ids.append(h_id)
 	return ids
 
-def insert_tweet_hashtags(t_id, h_ids, tweet, entities):
-	if(cur is not None):
-		h_ids = list(set(h_ids))
-		for i in h_ids:
-			try:
-				cur.execute(
-					"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
-					(t_id, i))
-			except psycopg2.Error as e:
-				print(e.pgerror)
-				sys.exit(1)
-
-def insert_data(tweet, user, entities):
-	if(not(verify_user_existence_in_database(user))):
-		insert_user(user)
-	t_id = insert_tweet(tweet)
-	if(t_id >= 0):
-		h_ids = insert_hashtags(entities.get_hashtags())
-		insert_tweet_hashtags(t_id, h_ids, tweet, entities)
-		commit()
-
-def verify_user_existence_in_database(user):
-	cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
-	existence = cur.fetchone()[0]
-	return existence
-
-def get_hashtag_count(hashtag):
+def get_hashtag_tuple(hashtag):
 	cur.execute("""SELECT id, count FROM "Hashtag" WHERE text='{0}';""".format(hashtag))
 	result = cur.fetchone()
 	if(result is not None):
 		return result
 	else:
 		result
+
+def update_hashtag_count(tup):
+	if(cur is not None):
+		count = str(int(tup[1]) + 1)
+		cur.execute("""UPDATE "Hashtag" SET count=%s WHERE id=%s;""",
+					(count, tup[0]))
+
+def insert_tweet_hashtags(t_id, h_ids):
+	if(cur is not None):
+		h_ids = list(set(h_ids))
+		for i in h_ids:
+			cur.execute(
+				"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
+				(t_id, i))
