@@ -1,6 +1,7 @@
 from models.model import Tweet, User, Entities
 from util.normalizer import *
 from util import text_processor
+import datetime
 
 def create_tweet_object(data_json, entities):
 	""" Creates an object of type Tweet with the
@@ -13,6 +14,7 @@ def create_tweet_object(data_json, entities):
 		source_device = normalize_source_device(str(data_json.get("source")))
 		
 		t = normalize_time(data_json.get("created_at"))
+		date = datetime.datetime.now().date()
 
 		text = data_json.get("text")
 		raw_text = text_processor.remove_entities(data_json.get("text"), entities)
@@ -20,7 +22,7 @@ def create_tweet_object(data_json, entities):
 		tokens = text_processor.tokenize_tweet(text)
 
 		tweet = Tweet(text, raw_text, data_json.get("id_str"), 
-					  source_device, t, user_json.get("id"),
+					  source_device, t, user_json.get("id"), date,
 					  entities, tokens)
 
 		return tweet

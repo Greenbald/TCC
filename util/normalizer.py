@@ -1,6 +1,5 @@
 import time
 
-
 def normalize_source_device(source):
 
 	source_device = source
@@ -20,7 +19,7 @@ def normalize_source_device(source):
 
 	return source_device
 
-def convert_utc_to_brt(utc_time):
+def convert_time_utc_to_brt(utc_time):
 	""" UTC time is 3 hours ahead of brazil 
 		it does not consider the summer time """
 	i = 2
@@ -32,16 +31,17 @@ def convert_utc_to_brt(utc_time):
 		h = h + 24
 	return str(h) + r
 
-
 def normalize_time(t):
 	""" This function is necessary because the time zone provided
 		by the twitter is UTC, so we need to convert to BRT(-3h). 
 		of course this is not necessarily true, because exists 
 		summer time. But... It will work for now. =D"""
 
-	new_t = time.strftime('%H:%M:%S', time.strptime(t,'%a %b %d %H:%M:%S +0000 %Y'))
+	date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(t,'%a %b %d %H:%M:%S +0000 %Y')).split()
+	new_t = date_time[1]
+	new_d = date_time[0]
 
-	new_t = convert_utc_to_brt(new_t)
+	new_t = convert_time_utc_to_brt(new_t)
 
 	h = int(new_t.split(":")[0])
 	if(h >= 6 and h < 12):

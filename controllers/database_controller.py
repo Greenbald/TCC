@@ -69,11 +69,11 @@ def update_user(user):
 def insert_tweet(tweet):
 	if(cur is not None):
 		cur.execute(
-     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text, source, raw_text)
-         	VALUES (%s, %s, %s , %s, %s, %s) RETURNING id;""",
+     		 """INSERT INTO \"Tweet\" (t_id, created_at, u_id, text, source, raw_text, date)
+         	VALUES (%s, %s, %s , %s, %s, %s, %s) RETURNING id;""",
      			(tweet.get_tweet_id(), tweet.get_created_at(), 
      			tweet.get_user_id(), tweet.get_text(), tweet.get_source_device(),
-     			tweet.get_raw_text()))
+     			tweet.get_raw_text(), tweet.get_date()))
 		return cur.fetchone()[0]
 	return -1
 
