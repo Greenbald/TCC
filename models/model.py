@@ -1,7 +1,8 @@
 class Tweet():
     """ A tweet model to save in the database """
     def __init__(self, text, raw_text, tweet_id, 
-                source_device, created_time, user_id, entities):
+                source_device, created_time, user_id,
+                entities, tokens):
         self._text = text
         self._raw_text = raw_text
         self._tweet_id = tweet_id
@@ -9,6 +10,7 @@ class Tweet():
         self._created_time = created_time
         self._user_id = user_id
         self._entities = entities
+        self._tokens = tokens
  
     def get_text(self):
         return self._text
@@ -31,6 +33,9 @@ class Tweet():
     def get_entities(self):
         return self._entities
 
+    def get_tokens(self):
+        return self._tokens
+
     def __repr__(self):
         return "Text : " + str(self._text) + "\n" \
         "Raw_Text : " + str(self._raw_text) + "\n" \
@@ -39,6 +44,7 @@ class Tweet():
         "Created_Time : " + str(self._created_time) + "\n" \
         "User_ID : " + str(self._user_id) + "\n" \
         "Entities : " + str(self._entities) + "\n" \
+        "Tokens : " + str(self._tokens) + "\n" \
         "-----------------------------------------------"
 
 
