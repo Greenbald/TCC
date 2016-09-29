@@ -1,16 +1,15 @@
 from __future__ import absolute_import, print_function
 
 from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
 from tweepy import Stream
 from controllers.tweet_controller import *
 import json
 import codecs
 import sys
 import signal
+from util import twitter_oauth
 
 DEBUG = "-debug"
-
 
 # RELATED TO SYS ARGUMENTS
 if(len(sys.argv) > 1):
@@ -19,11 +18,6 @@ if(len(sys.argv) > 1):
 else:
     signal.signal(signal.SIGINT, lambda x,y: sys.exit(0))
 # END 
-
-consumer_key = "6ZvBQkiTM2rX2svhAlMgg3Ekm"
-consumer_secret = "Xxyg43oq6JHoGrWS0zFXkUysscDuTk1FYIABsrbNpputlouJED"
-access_token = "2876597908-XuwL9VoPI6jw5ErlyqnlCiwGXWyzG81SDAf1gE2"
-access_token_secret = "pZc6J6mLPi5DIGUDMp5p2l1HEUDtuwZLinstQ00YMQiwS"
 
 # RELATED TO FILE ACCESS TO GET ALL KEYWORDS AND LANGUAGES OF TWEETS
 def get_keywords():
@@ -64,8 +58,7 @@ if __name__ == '__main__':
     init_database()
 
     l = StdOutListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
+    auth = twitter_oauth.get_twitter_auth()
 
     keywords = get_keywords()
     lang = get_languages()  
