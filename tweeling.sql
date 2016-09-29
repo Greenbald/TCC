@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.4.1
 -- Dumped by pg_dump version 9.4.1
--- Started on 2016-09-26 19:49:06
+-- Started on 2016-09-28 22:16:43
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -14,7 +14,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 180 (class 3079 OID 11855)
+-- TOC entry 181 (class 3079 OID 11855)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -22,8 +22,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2039 (class 0 OID 0)
--- Dependencies: 180
+-- TOC entry 2053 (class 0 OID 0)
+-- Dependencies: 181
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -42,7 +42,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE "Hashtag" (
-    text character varying(40),
+    text character varying(60),
     count integer DEFAULT 1 NOT NULL,
     id bigint NOT NULL
 );
@@ -51,7 +51,7 @@ CREATE TABLE "Hashtag" (
 ALTER TABLE "Hashtag" OWNER TO postgres;
 
 --
--- TOC entry 2040 (class 0 OID 0)
+-- TOC entry 2054 (class 0 OID 0)
 -- Dependencies: 177
 -- Name: TABLE "Hashtag"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -60,7 +60,7 @@ COMMENT ON TABLE "Hashtag" IS 'Every row is an hashtag';
 
 
 --
--- TOC entry 2041 (class 0 OID 0)
+-- TOC entry 2055 (class 0 OID 0)
 -- Dependencies: 177
 -- Name: COLUMN "Hashtag".count; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -84,7 +84,7 @@ CREATE SEQUENCE "Hashtag_id_seq"
 ALTER TABLE "Hashtag_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2042 (class 0 OID 0)
+-- TOC entry 2056 (class 0 OID 0)
 -- Dependencies: 179
 -- Name: Hashtag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -111,7 +111,7 @@ CREATE TABLE "Tweet" (
 ALTER TABLE "Tweet" OWNER TO postgres;
 
 --
--- TOC entry 2043 (class 0 OID 0)
+-- TOC entry 2057 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: TABLE "Tweet"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -120,7 +120,7 @@ COMMENT ON TABLE "Tweet" IS 'The representation of the tweet''s data';
 
 
 --
--- TOC entry 2044 (class 0 OID 0)
+-- TOC entry 2058 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: COLUMN "Tweet".t_id; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -129,7 +129,7 @@ COMMENT ON COLUMN "Tweet".t_id IS 'The tweet''s id from given from twitter';
 
 
 --
--- TOC entry 2045 (class 0 OID 0)
+-- TOC entry 2059 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: COLUMN "Tweet".created_at; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -138,7 +138,7 @@ COMMENT ON COLUMN "Tweet".created_at IS 'The moment of the day the tweet was cre
 
 
 --
--- TOC entry 2046 (class 0 OID 0)
+-- TOC entry 2060 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: COLUMN "Tweet".u_id; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -147,7 +147,7 @@ COMMENT ON COLUMN "Tweet".u_id IS 'User id that correlates with the User table';
 
 
 --
--- TOC entry 2047 (class 0 OID 0)
+-- TOC entry 2061 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: COLUMN "Tweet".source; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -156,7 +156,7 @@ COMMENT ON COLUMN "Tweet".source IS 'the device the tweet was posted';
 
 
 --
--- TOC entry 2048 (class 0 OID 0)
+-- TOC entry 2062 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: COLUMN "Tweet".raw_text; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -178,7 +178,7 @@ CREATE TABLE "Tweet_Hashtag" (
 ALTER TABLE "Tweet_Hashtag" OWNER TO postgres;
 
 --
--- TOC entry 2049 (class 0 OID 0)
+-- TOC entry 2063 (class 0 OID 0)
 -- Dependencies: 178
 -- Name: TABLE "Tweet_Hashtag"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -187,7 +187,7 @@ COMMENT ON TABLE "Tweet_Hashtag" IS 'The table that represents the relationship 
 
 
 --
--- TOC entry 2050 (class 0 OID 0)
+-- TOC entry 2064 (class 0 OID 0)
 -- Dependencies: 178
 -- Name: COLUMN "Tweet_Hashtag".t_id; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -211,7 +211,7 @@ CREATE SEQUENCE "Tweet_id_seq"
 ALTER TABLE "Tweet_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2051 (class 0 OID 0)
+-- TOC entry 2065 (class 0 OID 0)
 -- Dependencies: 174
 -- Name: Tweet_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -235,7 +235,7 @@ CREATE SEQUENCE "Tweet_u_id_seq"
 ALTER TABLE "Tweet_u_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2052 (class 0 OID 0)
+-- TOC entry 2066 (class 0 OID 0)
 -- Dependencies: 175
 -- Name: Tweet_u_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -261,7 +261,7 @@ CREATE TABLE "User" (
 ALTER TABLE "User" OWNER TO postgres;
 
 --
--- TOC entry 2053 (class 0 OID 0)
+-- TOC entry 2067 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: TABLE "User"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -270,7 +270,7 @@ COMMENT ON TABLE "User" IS 'This table represents the data associated to a speci
 
 
 --
--- TOC entry 2054 (class 0 OID 0)
+-- TOC entry 2068 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN "User".friends_count; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -279,7 +279,7 @@ COMMENT ON COLUMN "User".friends_count IS 'The number of double sided connection
 
 
 --
--- TOC entry 2055 (class 0 OID 0)
+-- TOC entry 2069 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN "User".description; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -288,7 +288,7 @@ COMMENT ON COLUMN "User".description IS 'Description uf tweet''s user';
 
 
 --
--- TOC entry 2056 (class 0 OID 0)
+-- TOC entry 2070 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN "User".followers_count; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -297,7 +297,7 @@ COMMENT ON COLUMN "User".followers_count IS 'The number of followers of this use
 
 
 --
--- TOC entry 2057 (class 0 OID 0)
+-- TOC entry 2071 (class 0 OID 0)
 -- Dependencies: 173
 -- Name: COLUMN "User".u_id; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -321,7 +321,7 @@ CREATE SEQUENCE "User_id_seq"
 ALTER TABLE "User_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2058 (class 0 OID 0)
+-- TOC entry 2072 (class 0 OID 0)
 -- Dependencies: 172
 -- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -330,7 +330,25 @@ ALTER SEQUENCE "User_id_seq" OWNED BY "User".id;
 
 
 --
--- TOC entry 1904 (class 2604 OID 57621)
+-- TOC entry 180 (class 1259 OID 57877)
+-- Name: users_view; Type: MATERIALIZED VIEW; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE MATERIALIZED VIEW users_view AS
+ SELECT "User".friends_count,
+    "User".description,
+    "User".location,
+    "User".followers_count,
+    "User".id,
+    "User".u_id
+   FROM "User"
+  WITH NO DATA;
+
+
+ALTER TABLE users_view OWNER TO postgres;
+
+--
+-- TOC entry 1909 (class 2604 OID 57621)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -338,7 +356,7 @@ ALTER TABLE ONLY "Hashtag" ALTER COLUMN id SET DEFAULT nextval('"Hashtag_id_seq"
 
 
 --
--- TOC entry 1902 (class 2604 OID 41129)
+-- TOC entry 1907 (class 2604 OID 41129)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -346,7 +364,7 @@ ALTER TABLE ONLY "Tweet" ALTER COLUMN id SET DEFAULT nextval('"Tweet_id_seq"'::r
 
 
 --
--- TOC entry 1903 (class 2604 OID 41130)
+-- TOC entry 1908 (class 2604 OID 41130)
 -- Name: u_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -354,7 +372,7 @@ ALTER TABLE ONLY "Tweet" ALTER COLUMN u_id SET DEFAULT nextval('"Tweet_u_id_seq"
 
 
 --
--- TOC entry 1901 (class 2604 OID 41118)
+-- TOC entry 1906 (class 2604 OID 41118)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -362,7 +380,7 @@ ALTER TABLE ONLY "User" ALTER COLUMN id SET DEFAULT nextval('"User_id_seq"'::reg
 
 
 --
--- TOC entry 1915 (class 2606 OID 57627)
+-- TOC entry 1927 (class 2606 OID 57627)
 -- Name: Hashtag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -371,7 +389,7 @@ ALTER TABLE ONLY "Hashtag"
 
 
 --
--- TOC entry 1917 (class 2606 OID 57589)
+-- TOC entry 1930 (class 2606 OID 57866)
 -- Name: Hashtag_text_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -380,7 +398,7 @@ ALTER TABLE ONLY "Hashtag"
 
 
 --
--- TOC entry 1919 (class 2606 OID 57557)
+-- TOC entry 1932 (class 2606 OID 57557)
 -- Name: Tweet_Hashtag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -389,7 +407,7 @@ ALTER TABLE ONLY "Tweet_Hashtag"
 
 
 --
--- TOC entry 1911 (class 2606 OID 41144)
+-- TOC entry 1919 (class 2606 OID 41144)
 -- Name: Tweet_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -398,7 +416,7 @@ ALTER TABLE ONLY "Tweet"
 
 
 --
--- TOC entry 1913 (class 2606 OID 41154)
+-- TOC entry 1921 (class 2606 OID 41154)
 -- Name: Tweet_t_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -407,7 +425,16 @@ ALTER TABLE ONLY "Tweet"
 
 
 --
--- TOC entry 1907 (class 2606 OID 41157)
+-- TOC entry 1923 (class 2606 OID 57868)
+-- Name: Tweet_t_id_key1; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY "Tweet"
+    ADD CONSTRAINT "Tweet_t_id_key1" UNIQUE (t_id);
+
+
+--
+-- TOC entry 1913 (class 2606 OID 41157)
 -- Name: User_u_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -416,7 +443,16 @@ ALTER TABLE ONLY "User"
 
 
 --
--- TOC entry 1909 (class 2606 OID 41138)
+-- TOC entry 1915 (class 2606 OID 57870)
+-- Name: User_u_id_key1; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY "User"
+    ADD CONSTRAINT "User_u_id_key1" UNIQUE (u_id);
+
+
+--
+-- TOC entry 1917 (class 2606 OID 41138)
 -- Name: id; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -425,7 +461,39 @@ ALTER TABLE ONLY "User"
 
 
 --
--- TOC entry 1922 (class 2606 OID 57628)
+-- TOC entry 1925 (class 1259 OID 57897)
+-- Name: Hashtag_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "Hashtag_id_idx" ON "Hashtag" USING btree (id);
+
+
+--
+-- TOC entry 1928 (class 1259 OID 57898)
+-- Name: Hashtag_text_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "Hashtag_text_idx" ON "Hashtag" USING btree (text);
+
+
+--
+-- TOC entry 1924 (class 1259 OID 57901)
+-- Name: Tweet_u_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "Tweet_u_id_idx" ON "Tweet" USING btree (u_id);
+
+
+--
+-- TOC entry 1911 (class 1259 OID 57894)
+-- Name: User_u_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "User_u_id_idx" ON "User" USING btree (u_id);
+
+
+--
+-- TOC entry 1935 (class 2606 OID 57628)
 -- Name: Tweet_Hashtag_h_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -434,7 +502,7 @@ ALTER TABLE ONLY "Tweet_Hashtag"
 
 
 --
--- TOC entry 1921 (class 2606 OID 57563)
+-- TOC entry 1934 (class 2606 OID 57563)
 -- Name: Tweet_Hashtag_t_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -443,7 +511,7 @@ ALTER TABLE ONLY "Tweet_Hashtag"
 
 
 --
--- TOC entry 1920 (class 2606 OID 41158)
+-- TOC entry 1933 (class 2606 OID 41158)
 -- Name: Tweet_u_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -452,7 +520,7 @@ ALTER TABLE ONLY "Tweet"
 
 
 --
--- TOC entry 2038 (class 0 OID 0)
+-- TOC entry 2052 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -463,7 +531,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2016-09-26 19:49:06
+-- Completed on 2016-09-28 22:16:43
 
 --
 -- PostgreSQL database dump complete

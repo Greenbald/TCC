@@ -8,7 +8,7 @@ count = 0
 def open_database_connection():
 	print("Connecting to the database...")
 	global conn
-	conn = psycopg2.connect("dbname = tweeling user=postgres")
+	conn = psycopg2.connect("dbname=tweeling user=postgres")
 	global cur
 	cur = conn.cursor()	
 
