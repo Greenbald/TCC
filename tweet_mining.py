@@ -62,6 +62,5 @@ if __name__ == '__main__':
 
     keywords = get_keywords()
     lang = get_languages()  
-
     stream = Stream(auth, l)
     stream.filter(languages=lang, track=keywords)

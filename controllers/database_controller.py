@@ -29,36 +29,53 @@ def close():
 		cur.close()
 		conn.close()
 
+def rollback():
+	if((conn is not None)):
+		conn.rollback()
+
 
 def insert_data(tweet, user):
 	try:
-		insert_or_update_user(user)
+		u_id = insert_or_update_user(user)
 
 		t_id = insert_tweet(tweet)
 
 		insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, tweet.get_entities())
+
+		insert_user_tweet_relationship(u_id, t_id)
+
+		commit()
+
 	except psycopg2.Error as e:
 		print(e.pgerror)
 		conn.rollback()
 
 def insert_or_update_user(user):
-	if(not(verify_user_existence_in_database(user))):
-		insert_user(user)
+	u_id = verify_user_existence_in_database(user)
+	if(u_id < 0):
+		u_id = insert_user(user)
 	else:
 		update_user(user)
+	return u_id
 
 def verify_user_existence_in_database(user):
-	cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
-	existence = cur.fetchone()[0]
-	return existence
+	#cur.execute("select exists(select 1 from \"User\" where \"u_id\"="+ str(user.get_user_id()) + ");")
+	cur.execute("select id from \"User\" where \"u_id\" =" + str(user.get_user_id()) + ";")
+	row = cur.fetchone()
+	if(row is None):
+		return -1
+	else:
+		return row[0]
 
 def insert_user(user):
 	if(cur is not None):
 		cur.execute(
      		 """INSERT INTO \"User\" (u_id, description, location, followers_count, friends_count)
-         	VALUES (%s, %s, %s , %s, %s);""",
+         	VALUES (%s, %s, %s , %s, %s) RETURNING id;""",
      			(user.get_user_id(), user.get_description(), 
      			user.get_location(), user.get_followers_count(), user.get_friends_count()))
+		return cur.fetchone()[0]
+	return -1
 
 def update_user(user):
 	cur.execute("""UPDATE "User"
@@ -82,7 +99,6 @@ def insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, entities):
 	if(t_id >= 0):
 		h_ids = insert_hashtags(entities.get_hashtags())
 		insert_tweet_hashtags(t_id, h_ids)
-		commit()
 
 
 def insert_hashtags(hashtags):
@@ -125,3 +141,8 @@ def insert_tweet_hashtags(t_id, h_ids):
 			cur.execute(
 				"""INSERT INTO "Tweet_Hashtag" (t_id, h_id) VALUES(%s, %s);""",
 				(t_id, i))
+
+def insert_user_tweet_relationship(u_id, t_id):
+	cur.execute(
+		"""INSERT INTO "Tweet_User" (t_id, u_id) VALUES(%s, %s);""",
+			(t_id, u_id))
