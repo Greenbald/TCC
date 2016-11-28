@@ -1,5 +1,6 @@
 import psycopg2
 import sys
+import os
 
 conn = None
 cur = None
@@ -8,7 +9,7 @@ count = 0
 def open_database_connection():
 	print("Connecting to the database...")
 	global conn
-	conn = psycopg2.connect("dbname=tweeling user=postgres")
+	conn = psycopg2.connect(database="postgres", user="postgres", password=os.environ["DB_PASSWORD"]) 
 	global cur
 	cur = conn.cursor()	
 
