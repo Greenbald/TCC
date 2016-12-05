@@ -58,7 +58,7 @@ def insert_data(tweet, user):
 
 		#insert_user_tweet_relationship(u_id, t_id)
 
-		monet_insert_tweet(tweet)
+		#monet_insert_tweet(tweet)
 
 		commit()
 
