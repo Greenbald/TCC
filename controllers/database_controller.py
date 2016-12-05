@@ -1,10 +1,15 @@
 import psycopg2
 import sys
 import os
+import pymonetdb
+import unicodedata
 
 conn = None
 cur = None
 count = 0
+
+monetConn = None
+monetCur = None
 
 def open_database_connection():
 	print("Connecting to the database...")
@@ -12,6 +17,13 @@ def open_database_connection():
 	conn = psycopg2.connect(database="postgres", user="postgres", password=os.environ["DB_PASSWORD"]) 
 	global cur
 	cur = conn.cursor()	
+	global monetConn
+	monetConn = pymonetdb.connect(username="paulo", password=os.environ["DB_PASSWORD"],
+                               hostname="localhost", database="demo")
+	global monetCur
+	monetCur = monetConn.cursor()
+
+
 
 def commit():
 	if(conn is not None):
@@ -28,6 +40,8 @@ def close():
 		conn.rollback()
 		cur.close()
 		conn.close()
+		monetCur.close()
+		monetConn.close()
 
 def rollback():
 	if((conn is not None)):
@@ -42,7 +56,9 @@ def insert_data(tweet, user):
 
 		insert_hashtags_and_relationship_with_tweet_if_tweet(t_id, tweet.get_entities())
 
-		insert_user_tweet_relationship(u_id, t_id)
+		#insert_user_tweet_relationship(u_id, t_id)
+
+		monet_insert_tweet(tweet)
 
 		commit()
 
@@ -146,3 +162,51 @@ def insert_user_tweet_relationship(u_id, t_id):
 	cur.execute(
 		"""INSERT INTO "Tweet_User" (t_id, u_id) VALUES(%s, %s);""",
 			(t_id, u_id))
+
+
+#------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------MONET DB BELOW-------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------
+
+
+def strip_accents(s):
+	return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+
+def monet_insert_tweet(tweet):
+
+	t_id = tweet.get_tweet_id()
+
+	try:
+
+		monetCur.execute("INSERT INTO tweet_tokens (t_id) values (" + t_id + ");")
+		monetConn.commit()
+
+	except pymonetdb.exceptions.OperationalError as e:
+		monetConn.rollback()
+		return
+
+	for t in tweet.get_tokens():
+		try:
+			st = strip_accents(t)
+		except UnicodeDecodeError as e:
+			continue
+
+		print("TOKEN : ", st)
+		try:
+			monetCur.execute('ALTER TABLE tweet_tokens ADD ' + st + ' int default 0')
+			monetConn.commit()
+		except pymonetdb.exceptions.OperationalError as e:
+			monetConn.rollback()
+			if(('42000' not in str(e)) and ('42S21' in str(e))):
+				try:
+					monetCur.execute("UPDATE tweet_tokens SET " + st + " = " + st + " + 1 WHERE t_id = " + t_id)
+				except UnicodeDecodeError as e:
+					continue
+				monetConn.commit()
+		except UnicodeDecodeError as e:
+			continue

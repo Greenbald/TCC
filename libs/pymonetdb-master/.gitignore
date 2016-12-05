@@ -1,0 +1,9 @@
+MANIFEST
+dist/
+build/
+.tox
+pymonetdb.egg-info/
+.cache/
+.virtualenv/
+doc/_build/
+.coverage

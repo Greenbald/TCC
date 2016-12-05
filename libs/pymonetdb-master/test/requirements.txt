@@ -1,0 +1,8 @@
+coveralls
+pep8
+pytest
+tox
+nose
+Sphinx
+sphinx_rtd_theme
+mock
