@@ -17,11 +17,11 @@ def open_database_connection():
 	conn = psycopg2.connect(database="postgres", user="postgres", password=os.environ["DB_PASSWORD"]) 
 	global cur
 	cur = conn.cursor()	
-	global monetConn
-	monetConn = pymonetdb.connect(username="paulo", password=os.environ["DB_PASSWORD"],
-                               hostname="localhost", database="demo")
-	global monetCur
-	monetCur = monetConn.cursor()
+	#global monetConn
+	#monetConn = pymonetdb.connect(username="paulo", password=os.environ["DB_PASSWORD"],
+    #                           hostname="localhost", database="demo")
+	#global monetCur
+	#monetCur = monetConn.cursor()
 
 
 
@@ -40,8 +40,8 @@ def close():
 		conn.rollback()
 		cur.close()
 		conn.close()
-		monetCur.close()
-		monetConn.close()
+		#monetCur.close()
+		#monetConn.close()
 
 def rollback():
 	if((conn is not None)):
