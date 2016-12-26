@@ -6,6 +6,9 @@ from nltk.tokenize import TweetTokenizer
 from nltk.corpus import stopwords
 import unicodedata
 import codecs
+from util import narcissism_classifier
+import time
+
 
 with codecs.open('data/stopwords.data', encoding='utf-8', mode='r') as f:
 	stop_words = [str(x).replace("\n", "").strip().lower() for x in f]
@@ -73,15 +76,22 @@ def addToMonetDB(tokens, tableName, id):
 			continue
 
 row = cur.fetchone()
-while row:
+i = 0
+while row and i < 100:
 	t_id = str(row[0])
 	raw_text = row[1]
 	u_id = str(row[2])
 	tokens = tokenize_tweet(raw_text)
+	print('----------------------------')
 	print(raw_text)
-
-	addToMonetDB(tokens, "user_tokens", ("u_id", u_id))
-	addToMonetDB(tokens, "tweet_tokens", ("t_id", u_id))
+	print(tokens)
+	classification = narcissism_classifier.classify_tweet(tokens)
+	print(classification)
+	print('----------------------------')
+	
+	#addToMonetDB(tokens, "user_tokens", ("u_id", u_id))
+	#addToMonetDB(tokens, "tweet_tokens", ("t_id", u_id))
+	time.sleep(5)
 
 	row = cur.fetchone()
 
