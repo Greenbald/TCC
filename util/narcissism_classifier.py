@@ -1,7 +1,7 @@
 import codecs
 import unicodedata
 
-with codecs.open('data/swear_words.data', encoding='utf-8', mode='r') as f:
+with codecs.open('data/classifier_words.data', encoding='utf-8', mode='r') as f:
 	swear_words = [str(x).replace("\n", "").strip().lower() for x in f]
 
 

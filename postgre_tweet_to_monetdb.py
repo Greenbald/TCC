@@ -7,11 +7,9 @@ from nltk.corpus import stopwords
 import unicodedata
 import codecs
 from util import narcissism_classifier
+from util import text_processor
 import time
 
-
-with codecs.open('data/stopwords.data', encoding='utf-8', mode='r') as f:
-	stop_words = [str(x).replace("\n", "").strip().lower() for x in f]
 
 monetConn = pymonetdb.connect(username="paulo", password=os.environ["DB_PASSWORD"],
                                hostname="localhost", database="demo")
@@ -20,14 +18,6 @@ monetCur = monetConn.cursor()
 conn = psycopg2.connect(database="postgres", user="postgres", password=os.environ["DB_PASSWORD"]) 
 cur = conn.cursor()	
 
-
-def tokenize_tweet(text):
-	global stop_words
-	text = text.lower()
-	tokenizer = TweetTokenizer()
-	tokens = tokenizer.tokenize(text)
-	tokens = [tok for tok in tokens if tok not in stop_words and not tok.isdigit()]
-	return tokens
 
 def closeDatabases():
 	print("Closing the database...")
@@ -42,19 +32,17 @@ def strip_accents(s):
                   if unicodedata.category(c) != 'Mn')
 
 
-cur.execute("select t_id, raw_text, u_id from \"Tweet\";")
+#cur.execute("select t_id, raw_text, u_id from \"Tweet\";")
+cur.execute("select t_id, raw_text, u_id from \"Tweet\" order by u_id desc limit 50")
 
-def addToMonetDB(tokens, tableName, id, classification, text):
+def addToMonetDB(tokens, tableName, id, classification, text=None):
 
-	print('----------------------------')
-	print(text)
-	print(tokens)
-	print(classification)
-	print('----------------------------')
+	user_query = text is None
 	try:
-
-		query = "INSERT INTO " +  tableName + " ("+ id[0] + ", classification, text" + ") values (" + id[1] + "," + str(classification) + "," + "'" + text + "');"
-		print(query)
+		if not user_query:
+			query = "INSERT INTO " +  tableName + " ("+ id[0] + ", classification, text" + ") values (" + str(id[1]) + "," + str(classification) + "," + "'" + text + "');"
+		else:
+			query = "INSERT INTO " +  tableName + " ("+ id[0] + ", classification) values (" + str(id[1]) + "," + str(classification) + ");"
 		monetCur.execute(query)
 		monetConn.commit()
 
@@ -67,7 +55,6 @@ def addToMonetDB(tokens, tableName, id, classification, text):
 			st = strip_accents(t)
 		except UnicodeDecodeError as e:
 			continue
-		print("TOKEN : ", st)
 		try:
 			monetCur.execute('ALTER TABLE ' + tableName + ' ADD ' + st + ' int default 0')
 			monetConn.commit()
@@ -75,7 +62,7 @@ def addToMonetDB(tokens, tableName, id, classification, text):
 			monetConn.rollback()
 			if(('42000' not in str(e)) and ('42S21' in str(e))):
 				try:
-					monetCur.execute("UPDATE " +  tableName + " SET " + st + " = " + st + " + 1 WHERE " +  id[0] + " = " + id[1])
+					monetCur.execute("UPDATE " +  tableName + " SET " + st + " = " + st + " + 1 WHERE " +  id[0] + " = " + str(id[1]))
 				except UnicodeDecodeError as e:
 					continue
 				monetConn.commit()
@@ -83,18 +70,39 @@ def addToMonetDB(tokens, tableName, id, classification, text):
 			continue
 
 row = cur.fetchone()
-i = 0
+last_u_id = int(row[2])
+user_classification = False
 
-while row and i < 100:
-	t_id = str(row[0])
-	raw_text = row[1]
-	u_id = str(row[2])
-	tokens = tokenize_tweet(raw_text)
+#Statistics variables
+narcissists_tweets = 0
+total_tweets = 0
+narcissists_users = 0
+total_users = 1
 
-	classification = narcissism_classifier.classify_tweet(tokens)
+while row:
+	t_id = int(row[0])
+	raw_text = str(row[1])
+	u_id = int(row[2])
+	total_tweets = total_tweets + 1
 	
-	#addToMonetDB(tokens, "user_tokens", ("u_id", u_id))
-	addToMonetDB(tokens, "tweet_tokens", ("t_id", u_id), classification, raw_text)
+	tokens = text_processor.tokenize_tweet(raw_text)
+
+	#Tweets database
+	tweet_classification = narcissism_classifier.classify_tweet(tokens)
+	addToMonetDB(tokens, "tweet_tokens", ("t_id", t_id), tweet_classification, raw_text)
+	if tweet_classification:
+		narcissists_tweets = narcissists_tweets + 1
+
+	#Users database
+	if last_u_id == u_id:
+		user_classification = narcissism_classifier.classify_tweet(tokens) or user_classification
+	else:
+		total_users = total_users + 1
+		if user_classification:
+			narcissists_users = narcissists_users + 1
+		addToMonetDB(tokens, "user_tokens", ("u_id", last_u_id), user_classification)
+		last_u_id = u_id
+		user_classification = narcissism_classifier.classify_tweet(tokens)
 
 	row = cur.fetchone()
 
