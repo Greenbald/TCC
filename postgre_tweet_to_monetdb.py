@@ -44,11 +44,18 @@ def strip_accents(s):
 
 cur.execute("select t_id, raw_text, u_id from \"Tweet\";")
 
-def addToMonetDB(tokens, tableName, id):
+def addToMonetDB(tokens, tableName, id, classification, text):
 
+	print('----------------------------')
+	print(text)
+	print(tokens)
+	print(classification)
+	print('----------------------------')
 	try:
 
-		monetCur.execute("INSERT INTO " +  tableName + " ("+ id[0] + ") values (" + id[1] + ");")
+		query = "INSERT INTO " +  tableName + " ("+ id[0] + ", classification, text" + ") values (" + id[1] + "," + str(classification) + "," + "'" + text + "');"
+		print(query)
+		monetCur.execute(query)
 		monetConn.commit()
 
 	except pymonetdb.exceptions.OperationalError as e:
@@ -77,21 +84,17 @@ def addToMonetDB(tokens, tableName, id):
 
 row = cur.fetchone()
 i = 0
+
 while row and i < 100:
 	t_id = str(row[0])
 	raw_text = row[1]
 	u_id = str(row[2])
 	tokens = tokenize_tweet(raw_text)
-	print('----------------------------')
-	print(raw_text)
-	print(tokens)
+
 	classification = narcissism_classifier.classify_tweet(tokens)
-	print(classification)
-	print('----------------------------')
 	
 	#addToMonetDB(tokens, "user_tokens", ("u_id", u_id))
-	#addToMonetDB(tokens, "tweet_tokens", ("t_id", u_id))
-	time.sleep(5)
+	addToMonetDB(tokens, "tweet_tokens", ("t_id", u_id), classification, raw_text)
 
 	row = cur.fetchone()
 
