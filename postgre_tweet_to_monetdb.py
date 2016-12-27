@@ -21,9 +21,9 @@ cur = conn.cursor()
 
 def closeDatabases():
 	print("Closing the database...")
-	conn.rollback()
 	cur.close()
 	conn.close()
+	monetConn.commit()
 	monetCur.close()
 	monetConn.close()
 
@@ -33,11 +33,12 @@ def strip_accents(s):
 
 
 #cur.execute("select t_id, raw_text, u_id from \"Tweet\";")
-cur.execute("select t_id, raw_text, u_id from \"Tweet\" order by u_id desc limit 50")
+cur.execute("select t_id, raw_text, u_id from \"Tweet\" order by u_id desc limit 10000")
 
 def addToMonetDB(tokens, tableName, id, classification, text=None):
 
 	user_query = text is None
+	start_time = time.time()
 	try:
 		if not user_query:
 			query = "INSERT INTO " +  tableName + " ("+ id[0] + ", classification, text" + ") values (" + str(id[1]) + "," + str(classification) + "," + "'" + text + "');"
@@ -49,7 +50,9 @@ def addToMonetDB(tokens, tableName, id, classification, text=None):
 	except pymonetdb.exceptions.OperationalError as e:
 		monetConn.rollback()
 		return
+	print("TIME1: %s seconds" % (time.time() - start_time))
 
+	start_time = time.time()
 	for t in tokens:
 		try:
 			st = strip_accents(t)
@@ -66,8 +69,16 @@ def addToMonetDB(tokens, tableName, id, classification, text=None):
 				except UnicodeDecodeError as e:
 					continue
 				monetConn.commit()
+				message = "Row added to "
+				if user_query:
+					message = message + "user_tokens table..."
+				else:
+					message = message + "tweet_tokens table..."
+				#print(message)
 		except UnicodeDecodeError as e:
 			continue
+
+	print("TIME2: %s seconds" % (time.time() - start_time))
 
 row = cur.fetchone()
 last_u_id = int(row[2])
@@ -75,7 +86,7 @@ user_classification = False
 
 #Statistics variables
 narcissists_tweets = 0
-total_tweets = 0
+total_tweets = 1
 narcissists_users = 0
 total_users = 1
 
@@ -84,7 +95,7 @@ while row:
 	raw_text = str(row[1])
 	u_id = int(row[2])
 	total_tweets = total_tweets + 1
-	
+	print(u_id)
 	tokens = text_processor.tokenize_tweet(raw_text)
 
 	#Tweets database
@@ -104,6 +115,10 @@ while row:
 		last_u_id = u_id
 		user_classification = narcissism_classifier.classify_tweet(tokens)
 
+	print("Tweet numero : ", total_tweets)
 	row = cur.fetchone()
+
+print("TWEETS NARCISISTAS :", narcissists_tweets/total_tweets)
+print("USUARIOS NARCISISTAS : ", narcissists_users/total_users)
 
 closeDatabases()
