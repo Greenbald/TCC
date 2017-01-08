@@ -42,12 +42,13 @@ def addToMonetDB(tokens, tableName, id, classification):
 		monetConn.rollback()
 		return
 
-	print("R TIME: %s seconds" % (time.time() - start_time))
+	print("TIME1: %s seconds" % (time.time() - start_time))
 
 	start_time = time.time()
 	for t in tokens:
 		try:
 			monetCur.execute('ALTER TABLE ' + tableName + ' ADD ' + t + ' int default 0')
+			monetCur.execute("UPDATE " +  tableName + " SET " + t + " = " + t + " + 1 WHERE " +  id[0] + " = " + str(id[1]))
 			monetConn.commit()
 		except pymonetdb.exceptions.OperationalError as e:
 			monetConn.rollback()
@@ -57,7 +58,7 @@ def addToMonetDB(tokens, tableName, id, classification):
 		except UnicodeDecodeError as e:
 			continue
 
-	print("C TIME : %s seconds" % (time.time() - start_time))
+	print("TIME2: %s seconds" % (time.time() - start_time))
 
 row = cur.fetchone()
 last_u_id = int(row[2])
@@ -77,8 +78,8 @@ while row:
 	u_id = int(row[2])
 	total_tweets = total_tweets + 1
 
-	print("U_ID", u_id)
-	print("Progresso :", str(total_tweets/TWEETS) + "%", end='\r')
+	print(u_id)
+	print("Progresso :", str((total_tweets/TWEETS)*100) + "%", end='\r')
 
 	tokens = text_processor.tokenize_tweet(raw_text)
 	new_tokens = text_processor.process_tokens(tokens)
@@ -111,7 +112,7 @@ while row:
 		if narcissism_classifier.classify_tweet(new_tokens):
 			user_narcissist_tweets = user_narcissist_tweets + 1
 
-	#print("Tweet numero : ", total_tweets)
+	print("Tweet numero : ", total_tweets)
 	row = cur.fetchone()
 
 print("TWEETS NARCISISTAS : ", narcissists_tweets/total_tweets)
