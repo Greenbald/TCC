@@ -9,7 +9,7 @@ from util import narcissism_classifier
 from util import text_processor
 import time
 
-TWEETS = 1000
+TWEETS = 2500
 
 monetConn = pymonetdb.connect(username="paulo", password=os.environ["DB_PASSWORD"],
                                hostname="localhost", database="demo")
