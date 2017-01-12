@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import itertools
+from sklearn.ensemble import RandomForestClassifier
 
 
 def plot_confusion_matrix(cm, classes,
@@ -71,15 +72,23 @@ def train_model(data, folds):
 		score = model.score(X_test, y_test)
 		accuracies.append(score)
 
-
 		cm = confusion_matrix(y_test, y_pred)
 
 		#Metrics calculation
-		sensitivity = cm[1][1]/(cm[1][1] + cm[1][0])
+		if cm[1][1] + cm[1][0] == 0:
+			sensitivity = 0
+		else:
+			sensitivity = cm[1][1]/(cm[1][1] + cm[1][0])
 		sensitivities.append(sensitivity)
-		precision = cm[1][1]/(cm[1][1] + cm[0][1])
+		if cm[1][1] + cm[0][1] == 0:
+			precision = 0
+		else:
+			precision = cm[1][1]/(cm[1][1] + cm[0][1])
 		precisions.append(precision)
-		fmeasures.append(2*(sensitivity*precision)/(precision + sensitivity))
+		if precision + sensitivity != 0:
+			fmeasures.append(2*(sensitivity*precision)/(precision + sensitivity))
+		else:
+			fmeasures.append(0)
 
 		cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 		np.set_printoptions(precision=2)
